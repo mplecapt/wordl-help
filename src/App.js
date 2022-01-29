@@ -1,30 +1,24 @@
 import './App.css';
-import Basic from './Basic';
 import SuggestionList from './Suggestion';
+import SearchForm, { Keyboard } from './Search';
 
-function App() {
+export default function App() {
 	return (
-		<div style={{display: 'flex', flexDirection: 'row'}}>
-			<div style={{width: '50%'}}>
-				<SuggestionList />
+		<div className='columns'>
+			<div className='suggestions'>
+				<SuggestionList filterBy={/.*/} />
 			</div>
-			<div style={{width: '50%'}}>
-				
+			<div className='inputs'>
+				<SearchForm />
 			</div>
 		</div>
 	);
 }
 
-export default App;
 
 
 
 /*
-
-
-
-
-
 
 *notes*
 -show frequency of letters according to filter

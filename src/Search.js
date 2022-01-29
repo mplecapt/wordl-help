@@ -1,32 +1,58 @@
-import { useField } from "formik";
-import React, { Component } from "react";
+import './Search.css';
+import { Component } from "react";
 
-export class InputButton extends Component {
+export default class SearchForm extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { value: '' };
+		this.keyInput = this.keyInput.bind(this);
 	}
 
-	handleChange(e) {
-		if (e.target.value.length <= 1) {
-			this.setState({ value: e.target.value });
-		}
-		if (e.target.value.length === 1) {
-			this.nextComponent.focus();
-		}
+	keyInput(value) {
+
 	}
 
 	render() {
 		return (
 			<>
-				<input type='text' ref={(input) => this.input1 = input} onChange={this.handleTextChange} />
+				<div className='search content'>
+					
+				</div>
+				<div className='keyboard content'>
+					<Keyboard handler={this.keyInput} />
+				</div>
 			</>
 		);
 	}
 }
 
-const Style = {
-	box: {
-
-	}
+function Display() {
+	return (
+		<>
+		</>
+	);
 }
+
+function Keyboard({ handler }) {
+	return (
+		<div className='keyboard'>
+			{buttons.map((btn) => {
+				const st = (btn === 'Enter') ? {
+					padding: '15px 10px 15px 10px', 
+					fontWeight: 'normal'
+				} : null;
+				return (
+					<span key={btn} 
+						onClick={()=>{handler(btn)}}
+						className='key' style={st}
+					>{btn}</span>
+				);
+			})}
+		</div>
+	);
+}
+
+const buttons = [
+	'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+	'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
+	'Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '<-'
+];
