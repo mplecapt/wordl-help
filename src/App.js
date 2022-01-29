@@ -1,6 +1,6 @@
 import './App.css';
 import SuggestionList from './Suggestion';
-import SearchForm, { Keyboard } from './Search';
+import SearchForm from './Search';
 
 export default function App() {
 	return (
@@ -14,8 +14,6 @@ export default function App() {
 		</div>
 	);
 }
-
-
 
 
 /*

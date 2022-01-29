@@ -16,13 +16,84 @@
 	font-weight: bold;
 	font-family: 'Lucida Console', monospace;
 	min-width: 50px;
-	background-color: #bbb;
+	background-color: gray;
 	border-radius: 5px;
 	text-decoration: none;
 	transition: 1.2s;
+	user-select: none;
 }
 
 .key:active {
-	background-color: #eee;
+	background-color: #bbb;
+	transition: 0s;
+}
+
+.word {
+	min-width: 300px;
+	max-width: 300px;
+	display: flex;
+	flex-direction: row;
+	flex-flow: wrap;
+	align-items: center;
+	justify-content: flex-start;
+	height: 100%;
+}
+
+.letter {
+	display: flex;
+	margin: 3px;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	min-width: 50px;
+	min-height: 50px;
+	border: 2px solid gray;
+	font-family: 'Lucida Console', monospace;
+	font-weight: bold;
+	text-decoration: none;
+	transition: 1.0s;
+	user-select: none;
+}
+
+.letter:focus {
+	border: 2px solid #bbb;
+	transition: .1s;
+}
+
+.reset {
+	display: flex;
+	position: absolute;
+	width: 100px;
+	height: 40px;
+	border-radius: 50px;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+	background-color: gray;
+	box-shadow: 0 5px 0 0 #555;
+	top: 3vh;
+	right: 3vh;
+	user-select: none;
+}
+
+.reset:hover {
+	background-color: #d66;
+	box-shadow: 0px 5px 0px 0px #833;
+	transition: 0.4s;
+}
+
+.reset:active {
+	transform: translateY(5px);
+	box-shadow: none;
+	transition: 0.4s;
+}
+
+.clickable:hover {
+	cursor: pointer;
+	background-color: #555;
+}
+
+.clickable:active {
+	background-color: #bbb;
 	transition: 0s;
 }
