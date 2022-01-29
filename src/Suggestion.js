@@ -1,7 +1,7 @@
 import { wordlist } from './wordlist';
 
-export default function SuggestionList({ filterBy, ...props }) {
-	if (filterBy === undefined) filterBy = /.*/;
+export default function SuggestionList({ filterBy }) {
+	if (filterBy === null) filterBy = /.*/;
 
 	return (
 		<div style={Style.container}>
