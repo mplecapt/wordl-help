@@ -1,11 +1,12 @@
-import { wordlist } from './wordlist';
+//import { wordlist } from './wordlist';
+import dictionary from './dictionary.json'
 
 export default function SuggestionList({ filterBy, ...props }) {
 	if (filterBy === undefined) filterBy = /.*/;
 
 	return (
 		<div style={Style.container}>
-			{wordlist.filter(word => filterBy.test(word)).map((filteredWord, idx) => (
+			{dictionary.filter(word => filterBy.test(word)).map((filteredWord, idx) => (
 				<span style={Style.item} key={idx}>{filteredWord}</span>
 			))}
 		</div>
