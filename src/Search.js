@@ -3,7 +3,6 @@ import { Component } from "react";
 
 const INIT_STATE = {
 	words: [],
-	regx: null,
 };
 
 export default class SearchForm extends Component {
@@ -12,39 +11,56 @@ export default class SearchForm extends Component {
 		this.keyInput = this.keyInput.bind(this);
 		this.reset = this.reset.bind(this);
 		this.changePosState = this.changePosState.bind(this);
+		this.handle = this.handle.bind(this);
 		this.state = INIT_STATE
 	}
 
+	handle(r) {
+		this.props.setFilter(r);
+	}
+
+	idxFilter = (pos, state) => (
+		this.state.words.map((data, i) => (
+			(i % 5 === pos && data.posState === state) ? data.letter : null
+		)).join('')
+	)
+
+	knownFilter(idx) {
+		let arr1 = this.idxFilter(idx, 1);
+		let arr2 = this.idxFilter(idx, 2);
+		return arr1.length > 0
+			? `[${arr1}]`
+			: arr2.length > 0
+			? `[^${arr2}]`
+			: '.';
+	}
+
 	evaluate() {
-		let notInWord = `(?!\\b.*[^${this.state.words.filter(data => (data.posState === 0 ? data.letter : null)).join('')}].*\\b)`
-		let notHere = `(?=\\b[${this.state.words.filter((data, i) => (i % 5 === 0 && data.posState === 2 ? data.letter : null)).join('') || '.'}][${this.state.words.filter((data, i) => (i % 5 === 1 && data.posState === 2 ? data.letter : null)).join('') || '.'}][${this.state.words.filter((data, i) => (i % 5 === 2 && data.posState === 2 ? data.letter : null)).join('') || '.'}][${this.state.words.filter((data, i) => (i % 5 === 3 && data.posState === 2 ? data.letter : null)).join('') || '.'}][${this.state.words.filter((data, i) => (i % 5 === 4 && data.posState === 2 ? data.letter : null)).join('') || '.'}]\\b)`;
-		console.log(notHere);
+		let notInWordArr = this.state.words.map(data => (data.posState === 0 ? data.letter : null)).join('');
+		let notInWord = notInWordArr.length > 0 ? `(?!\\b.*[${notInWordArr}].*\\b)` : '';
+
+		let contains = this.state.words.map(data => (data.posState === 2 ? `(?=\\b.*[${data.letter}].*\\b)` : null)).filter(x => x).join('');
+
+		let here = `\\b${this.knownFilter(0) + this.knownFilter(1) + this.knownFilter(2) + this.knownFilter(3) + this.knownFilter(4)}\\b`;
+
+		let reg = new RegExp(notInWord + contains + here, 'gi');
+		console.log(reg);
+		this.handle(reg);
 	}
 
 	changePosState(i) {
-		this.setState(state => {
-			const words = state.words.map((item, j) => {
-				if (j === i) {
-					const newState = (item.posState === 2) ? 0 : item.posState + 1;
-					return { 
-						letter: item.letter, 
-						posState: newState,
-					}
-				} else {
-					return item;
-				}
-			});
-
-			return {
-				words,
-			};
-		});
-		this.evaluate();
+		this.setState(state => ({ 
+			words: state.words.map((item, j) => (
+				(j === i) ? { letter: item.letter, posState: ((item.posState === 2) ? 0 : item.posState + 1) } : item )
+			)
+		}));
 	}
 
 	keyInput(value) {
 		switch (value) {
-			case 'Enter': break;
+			case 'Enter': 
+				this.evaluate();
+				break;
 			case '<-':
 				if (this.state.words.length === 0) break;
 				this.setState({
@@ -62,11 +78,11 @@ export default class SearchForm extends Component {
 					}
 				});
 		}
-		this.evaluate();
 	}
 
 	reset() {
 		this.setState(INIT_STATE);
+		this.handle(null);
 	}
 
 	render() {

@@ -72,7 +72,7 @@
 	background-color: gray;
 	box-shadow: 0 5px 0 0 #555;
 	top: 3vh;
-	right: 3vh;
+	left: 3vh;
 	user-select: none;
 }
 
