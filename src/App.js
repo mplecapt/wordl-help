@@ -17,14 +17,3 @@ export default function App() {
 		</div>
 	);
 }
-
-
-/*
-
-*notes*
--show frequency of letters according to filter
--show which word has the highest frequency score
--bigger dictionary
--better handling for double lettered words
-
-*/

@@ -1,13 +1,15 @@
-//import { wordlist } from './wordlist';
-import dictionary from './dictionary.json'
+//import dictionary from './data/dictionary.json'
+import stats from './data/Stats.json'
 
 export default function SuggestionList({ filterBy }) {
-	if (filterBy === null) filterBy = /.*/;
+	if (filterBy === null || filterBy === undefined) filterBy = /.*/;
 
 	return (
 		<div style={Style.container}>
-			{dictionary.filter(word => filterBy.test(word)).map((filteredWord, idx) => (
-				<span style={Style.item} key={idx}>{filteredWord}</span>
+			{stats.Words.filter(data => filterBy.test(data.Word)).map((filteredData, idx) => (
+				<span key={idx} style={Style.item}>
+					{filteredData.Word}
+				</span>
 			))}
 		</div>
 	)
@@ -25,5 +27,5 @@ const Style = {
 	},
 	item: {
 		margin: '5px',
-	}
+	},
 }
