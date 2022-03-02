@@ -1,9 +1,15 @@
 import './Search.css';
-import { Component } from "react";
+import { Component, useCallback, useEffect } from "react";
 
 const INIT_STATE = {
 	words: [],
 };
+
+const LetterState = {
+	ABSENT:  0,
+	PRESENT: 1,
+	CORRECT: 2,
+}
 
 export default class SearchForm extends Component {
 	constructor(props) {
@@ -15,35 +21,76 @@ export default class SearchForm extends Component {
 		this.state = INIT_STATE
 	}
 
+	componentDidUpdate() {
+		if (this.props.receiveShare !== "") {
+			for (var i = 0; i < this.props.receiveShare.length; i++) {
+				this.keyInput(this.props.receiveShare.charAt(i))
+			}
+			this.props.setShare("");
+		}
+	}
+
 	handle(r) {
 		this.props.setFilter(r);
 	}
 
-	idxFilter = (pos, state) => (
-		this.state.words.map((data, i) => (
-			(i % 5 === pos && data.posState === state) ? data.letter : null
-		)).join('')
-	)
-
-	knownFilter(idx) {
-		let arr1 = this.idxFilter(idx, 1);
-		let arr2 = this.idxFilter(idx, 2);
-		return arr1.length > 0
-			? `[${arr1}]`
-			: arr2.length > 0
-			? `[^${arr2}]`
-			: '.';
-	}
-
 	evaluate() {
-		let notInWordArr = this.state.words.map(data => (data.posState === 0 ? data.letter : null)).join('');
-		let notInWord = notInWordArr.length > 0 ? `(?!\\b.*[${notInWordArr}].*\\b)` : '';
+		let absentArr = [];
+		let presentArr = ["", "", "", "", ""];
+		let correctArr = ["", "", "", "", ""];
+		this.state.words.forEach((data, idx) => {
+			switch(data.posState) {
+				case LetterState.ABSENT:
+					// ignore if defined earlier
+					if (
+						correctArr.includes(data.letter) ||
+						absentArr.includes(data.letter)
+					) break;
 
-		let contains = this.state.words.map(data => (data.posState === 2 ? `(?=\\b.*[${data.letter}].*\\b)` : null)).filter(x => x).join('');
+					// special check for present
+					if (presentArr.filter(str => (
+						str !== "" &&
+						str.includes(data.letter)
+					)).length > 0) break;
 
-		let here = `\\b${this.knownFilter(0) + this.knownFilter(1) + this.knownFilter(2) + this.knownFilter(3) + this.knownFilter(4)}\\b`;
+					absentArr.push(data.letter); 
+					break;
+				case LetterState.PRESENT:
+					// remove from absentArr if doubles exist
+					var check = absentArr.indexOf(data.letter)
+					if (check > -1) absentArr.splice(check, 1)
 
-		let reg = new RegExp(notInWord + contains + here, 'gi');
+					presentArr[idx] += data.letter;
+					break;
+				case LetterState.CORRECT:
+					// check for valid input
+					if (correctArr[idx] !== "")
+						alert("Invalid inputs: can't have two letters correct in the same position");
+					
+					// remove from absentArr if doubles exist
+					check = absentArr.indexOf(data.letter)
+					if (check > -1) absentArr.splice(check, 1)
+					
+					correctArr[idx] = data.letter;
+					break;
+				default:
+					console.log("Invalid state for letter: ", data);
+			}
+		});
+
+		let absent = absentArr.length > 0 ? `(?!\\b.*[${absentArr.join("")}].*\\b)` : '';
+		let present = presentArr.length > 0 ? presentArr.map(l => (l !== "" ? `(?=\\b.*${l}.*\\b)` : "")).join("") : ""
+		let correct = "\\b"
+		for (var i = 0; i < 5; i++) {
+			correct += (correctArr[i] !== "")
+				? `[${correctArr[i]}]`
+				: (presentArr[i] !== "")
+					? `[^${presentArr[i]}]`
+					: '.';
+		}
+		correct += "\\b"
+
+		let reg = new RegExp(absent + present + correct, 'gi');
 		console.log(reg);
 		this.handle(reg);
 	}
@@ -69,6 +116,22 @@ export default class SearchForm extends Component {
 					))
 				});
 				break;
+			case 'Escape':
+				if (this.state.words.length === 0) break;
+				var len = this.state.words.length;
+				if (len % 5 !== 0)
+					this.setState({
+						words: this.state.words.filter((letter, idx) => (
+							idx < len - (len % 5)
+						))
+					})
+				else
+					this.setState({
+						words: this.state.words.filter((letter, idx) => (
+							idx < len - 5
+						))
+					})
+				break;
 			default:
 				if (this.state.words.length >= 30) break;
 				this.setState(state => {
@@ -93,9 +156,9 @@ export default class SearchForm extends Component {
 						{(this.state.words || []).map((data, idx) => (
 							<span className='letter clickable' key={idx}
 								onClick={() => {this.changePosState(idx)}}
-								style={data.posState === 1
+								style={data.posState === LetterState.CORRECT
 									? { backgroundColor: '#4d5' }
-									: data.posState === 2
+									: data.posState === LetterState.PRESENT
 									? { backgroundColor: '#dd4' }
 									: null
 								}
@@ -118,6 +181,26 @@ export default class SearchForm extends Component {
 }
 
 function Keyboard({ handler }) {
+	const handleKeypress = useCallback(event => {
+		const { key, keyCode } = event;
+		console.log(`${key} | ${keyCode}`)
+		switch(keyCode) {
+			case 8: handler("<-"); break;
+			case 13: handler("Enter"); break;
+			case 27: handler("Escape"); break;
+			default:
+				if (keyCode >= 65 && keyCode <= 90)
+					handler(key);
+		}
+	}, [handler]);
+
+	useEffect(() => {
+		document.addEventListener("keydown", handleKeypress);
+		return () => {
+			document.removeEventListener("keydown", handleKeypress);
+		};
+	}, [handleKeypress]);
+
 	return (
 		<div className='keyboard'>
 			{buttons.map((btn) => {

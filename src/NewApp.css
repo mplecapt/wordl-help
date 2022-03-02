@@ -1,0 +1,66 @@
+button {
+	background: none!important;
+	border: none;
+	padding: 0!important;
+	/*optional*/
+	font-family: arial, sans-serif;
+	/*input has OS specific font-family*/
+	color: #069;
+	text-decoration: underline;
+	cursor: pointer;
+
+	font-weight: bold;
+	font-family: 'Lucida Console', monospace;
+}
+
+.container {
+	grid-area: list;
+
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+	gap: 5px;
+
+	width: 96vw;
+	height: 100%;
+	margin: 10px;
+	padding: 10px;
+
+	border-radius: 6px;
+	border: 1px dashed black;
+	overflow: auto;
+}
+
+.rows {
+	display: grid;
+	height: 95vh;
+	grid-template-rows: 1fr 1fr;
+	grid-template-areas: 
+		"graph"
+		"list";
+}
+
+.graph {
+	grid-area: graph;
+	background-color: red;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.graph-body {
+	width: 50%;
+	height: 90%;
+	border-bottom: 2px solid black;
+	border-left: 2px solid black;
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+	justify-content: center;
+}
+
+.data-bar {
+	max-width: 100px;
+	background-color: cyan;
+}

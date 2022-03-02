@@ -97,3 +97,28 @@
 	background-color: #bbb;
 	transition: 0s;
 }
+
+.container {
+	border: 2px dashed #bbb;
+	border-radius: 10px; 
+	padding: 5px;
+	margin: 2vh 3vh 2vh 2vh;
+	display: flex; 
+	flex-direction: row; 
+	flex-wrap: wrap;
+	overflow: auto; 
+	justify-content: space-around;
+	font-family: 'Lucida Console', monospace;
+	font-weight: bold;
+}
+
+.item {
+	margin: 5px;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.item:hover {
+	color: rgb(43, 120, 209);
+	text-decoration: underline;
+}
