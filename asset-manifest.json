@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/wordl-help/static/css/main.a7c88411.css",
-    "main.js": "/wordl-help/static/js/main.555d1280.js",
+    "main.css": "/wordl-help/static/css/main.ba83b556.css",
+    "main.js": "/wordl-help/static/js/main.a2dab04c.js",
     "index.html": "/wordl-help/index.html",
-    "main.a7c88411.css.map": "/wordl-help/static/css/main.a7c88411.css.map",
-    "main.555d1280.js.map": "/wordl-help/static/js/main.555d1280.js.map"
+    "main.ba83b556.css.map": "/wordl-help/static/css/main.ba83b556.css.map",
+    "main.a2dab04c.js.map": "/wordl-help/static/js/main.a2dab04c.js.map"
   },
   "entrypoints": [
-    "static/css/main.a7c88411.css",
-    "static/js/main.555d1280.js"
+    "static/css/main.ba83b556.css",
+    "static/js/main.a2dab04c.js"
   ]
 }
