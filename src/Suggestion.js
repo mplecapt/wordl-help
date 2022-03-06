@@ -1,17 +1,26 @@
 //import dictionary from './data/dictionary.json'
-import stats from './data/Stats.json'
+//import stats from './data/Stats.json'
+import { Component } from 'react';
+import scores from './data/score.json'
 import './Search.css'
 
-export default function SuggestionList({ filterBy, setShare }) {
-	if (filterBy === null || filterBy === undefined) filterBy = /.*/;
+export default class SuggestionList extends Component {
+	constructor(props) {
+		super(props)
+		scores.sort((a,b) => a.score < b.score ? 1 : -1);
+	}
 
-	return (
-		<div className="container">
-			{stats.Words.filter(data => filterBy.test(data.Word)).map((filteredData, idx) => (
-				<span key={idx} className="item" onClick={()=>{setShare(filteredData.Word)}}>
-					{filteredData.Word}
-				</span>
-			))}
-		</div>
-	)
+	render() {
+		var filterby = (this.props.filterBy === null || this.props.filterBy === undefined) ? /.*/ : this.props.filterBy;
+
+		return (
+			<div className="container">
+				{scores.filter(data => filterby.test(data.word)).map((filteredData, idx) => (
+					<span key={idx} className="item" onClick={()=>{this.props.setShare(filteredData.word)}}>
+						{filteredData.word}	
+					</span>
+				))}
+			</div>
+		)
+	}
 }

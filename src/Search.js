@@ -60,18 +60,18 @@ export default class SearchForm extends Component {
 					var check = absentArr.indexOf(data.letter)
 					if (check > -1) absentArr.splice(check, 1)
 
-					presentArr[idx] += data.letter;
+					presentArr[idx%5] += data.letter;
 					break;
 				case LetterState.CORRECT:
-					// check for valid input
-					if (correctArr[idx] !== "")
-						alert("Invalid inputs: can't have two letters correct in the same position");
-					
+					if (correctArr[idx%5] !== "" && correctArr[idx%5] !== data.letter) {
+						alert("Invalid input: two letters cannot be correct in the same position")
+					}
+
 					// remove from absentArr if doubles exist
 					check = absentArr.indexOf(data.letter)
 					if (check > -1) absentArr.splice(check, 1)
 					
-					correctArr[idx] = data.letter;
+					correctArr[idx%5] = data.letter;
 					break;
 				default:
 					console.log("Invalid state for letter: ", data);
@@ -135,7 +135,7 @@ export default class SearchForm extends Component {
 			default:
 				if (this.state.words.length >= 30) break;
 				this.setState(state => {
-					const words = state.words.concat({letter: value, posState: 0});
+					const words = state.words.concat({letter: value.toUpperCase(), posState: LetterState.ABSENT});
 					return {
 						words
 					}
